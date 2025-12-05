@@ -93,6 +93,7 @@ const writeEvents = (events) => fs.writeFileSync(EVENTS_FILE, JSON.stringify(eve
 
 // POST /track endpoint
 app.post('/track', (req,res) => {
+   console.log(req.body); 
   const ev = req.body;
   if(!ev) return res.status(400).json({ok:false,error:'Invalid data'});
   ev._receivedAt = new Date().toISOString();
@@ -102,6 +103,9 @@ app.post('/track', (req,res) => {
   console.log('Tracked:', ev);
   res.json({ok:true});
 });
+
+
+
 
 // GET /events endpoint
 app.get('/events', (req,res)=>res.json(readEvents()));
