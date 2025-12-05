@@ -91,19 +91,25 @@ if (!fs.existsSync(EVENTS_FILE)) fs.writeFileSync(EVENTS_FILE, '[]');
 const readEvents = () => JSON.parse(fs.readFileSync(EVENTS_FILE,'utf8'));
 const writeEvents = (events) => fs.writeFileSync(EVENTS_FILE, JSON.stringify(events,null,2),'utf8');
 
-// POST /track endpoint
-app.post('/track', (req,res) => {
+// // POST /track endpoint
+// app.post('/track', (req,res) => {
   
-  const ev = req.body;
-  if(!ev) return res.status(400).json({ok:false,error:'Invalid data'});
-  ev._receivedAt = new Date().toISOString();
-  const events = readEvents();
-  events.push(ev);
-  writeEvents(events);
-  console.log('Tracked:', ev);
-  res.json({ok:true});
-});
+//   const ev = req.body;
+//   if(!ev) return res.status(400).json({ok:false,error:'Invalid data'});
+//   ev._receivedAt = new Date().toISOString();
+//   const events = readEvents();
+//   events.push(ev);
+//   writeEvents(events);
+//   console.log('Tracked:', ev);
+//   res.json({ok:true});
+// });
 
+app.post('/track', (req, res) => {
+  const events = JSON.parse(fs.readFileSync(EVENTS_FILE));
+  events.push({ time: Date.now(), page: req.body.page });
+  fs.writeFileSync(EVENTS_FILE, JSON.stringify(events));
+  res.send({ status: 'ok' });
+});
 
 
 
